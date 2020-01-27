@@ -44,18 +44,23 @@ plt.title('Fastest Spacecrafts Launched in the Last 50 Years')
 #create a dataframe for manipulation
 data = [['1977-09-05', 62136], ['1989-10-18', 173736], ['2011-08-05', 209000], ['2018-08-12', 343180]]
 df = pd.DataFrame(data, columns = ['ds', 'y']) 
-df['cap'] = 50000000
 
 #use fbprophet to predict groth
-m = Prophet(growth='logistic')
+m = Prophet()
 m.fit(df)
-future = m.make_future_dataframe(periods=365*240)
-future['cap'] = 50000000
-fcst = m.predict(future)
+future = m.make_future_dataframe(periods=365*243)
+future.tail(n=10)
+
+forecast = m.predict(future)
+forecast.tail(n=3)
+
+py.init_notebook_mode()
+fig = plot_plotly(m, forecast)  # This returns a plotly Figure
+py.iplot(fig)
+
+m.plot_components(forecast)
 
 y = travelTime(50034460)
 timeConver(y)
 
-py.init_notebook_mode()
-fig = plot_plotly(m, fcst)  # This returns a plotly Figure
-py.iplot(fig)
+
